@@ -72,6 +72,13 @@ a:focus{outline:none;}
 	padding:0 0 28px;
 	margin:0 0 28px;
 }
+.other{
+	width:100%;
+	overflow:hidden;
+	border-bottom: 1px solid; border-color: #333;
+	padding:0 0 28px;
+	margin:0 0 28px;
+}
 .recent{
 	width:100%;
 	overflow:hidden;
@@ -141,7 +148,36 @@ a:focus{outline:none;}
 .contact .twitter strong{background:url(../images/ico-twitter.gif) no-repeat 0 4px;}
 .contact .linkedin strong{background:url(../images/ico-linkedin.gif) no-repeat 0 4px;}
 .contact .facebook strong{background:url(../images/ico-facebook.gif) no-repeat 0 4px;}
-.contact a:hover strong{text-decoration:none;}
+.other ul{
+	margin:0;
+	padding:0;
+	list-style:none;
+	overflow:hidden;
+	height:1%;
+	font:11px Arial, Helvetica, sans-serif;
+}
+.other ul li{
+	float:left;
+	padding:11px 31px 0 0;
+}
+.other a{
+	float:left;
+	overflow:hidden;
+
+	color:#00d;
+}
+.other strong{
+	display:block;
+	text-decoration:none;
+	padding:0 0 4px 23px;
+	font:15px/25px Georgia, 'Times New Roman', Times, serif;
+	color:#333;
+}
+.other .matlabcentral strong{background:url(../images/ico-matlabcentral.jpg) no-repeat 0 4px;}
+.other .stackoverflow strong{background:url(../images/ico-stackoverflow.png) no-repeat 0 4px;}
+.other .endomondo strong{background:url(../images/ico-endomondo.png) no-repeat 0 4px;}
+.other .sportypal strong{background:url(../images/ico-sportypal.jpg) no-repeat 0 4px;}
+.other a:hover strong{text-decoration:none;}
 
 /* main-holder */
 .main-holder{
