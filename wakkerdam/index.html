@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Werewolves and Civilians - A Multi-Agent Systems project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="jquery.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+      });
+    </script>
+    <script type="text/javascript" src="mathjax/MathJax.js"></script>
+
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Werewolves and Civilians - A Multi-Agent Systems project</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li class="active"><a href="index.html">Introduction</a></li>
+                <li><a href="del.html">Dynamic Epistemic Logic</a></li>
+                <li><a href="implementation.html">Implementation</a></li>
+                <li><a href="results.html">Conclusion and future work</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+      <div class="row">
+        <div id="content" class="span8 offset1">
+          <h1>Introduction</h1>
+
+          <p class="lead">Our Multi-Agent Systems project is based on the game 'Weerwolven' and we model it using Dynamic Epistemic Logic.</p>
+
+          <p>A popular party game under students is the werewolves game. The participants of this game are divided into two mutually exclusive species: the humans and the werewolves. The goal for all players is to survive the game by eliminating all members of the other species. A minority of players are werewolves, which have the advantage that they know the role of every player. The game starts with each player receiving a card on which his/her role is displayed. From there the game consist of rounds where each round is divided in two parts: a day part and a night part.</p>
+
+          <p>During the night only the werewolves are active(in a real-life version of the game the humans close their eyes), in which they (silently) vote for a player to die. When the werewolves are able to reach consensus on which human to kill, then the human gets killed. The next day, this information is announced by the quizmaster to all players.</p>
+
+          <p>During the day both species are active, they can discuss what happened and who they suspect. In this project we leave out this discussion and introduce a quizmaster that is leaking information. At the end of a day all players vote upon one player to be eliminated, which is not necessarily a werewolf. The player with the majority of the votes will die, and is therefore not a part of the game anymore.</p>
+
+          <p>The game played by people has many different aspects e.g. lying, aggressive questioning and other tactics, depending on the interest of that player. Our project focuses on using Dynamic Epistemic Logic to model the knowledge changing events which occur during the game and show how they affect the Kripke model. The events are: <i>viewing the role cards</i>, <i>the night killing</i>, <i>the quizmaster leaking</i> and the <i>day killing</i>.</p>
+
+          <p>In this project we will model this simplified version of the game using Dynamic Epistemic Logic to help clarify the concepts of modelling a game using this form of logic. One Kripke model is used to model the knowledge in the game and using the update models we show how this Kripke model changes due to the occurrence of different events. We hope that our project will aid in the understanding of Dynamic Epistemic Logic.</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; 2013 Herbert Kruitbosch, Harm de Vries en Mark Scheeve</p>
+      </div>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
