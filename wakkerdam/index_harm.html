@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Werewolves and Civilians - A Multi-Agent Systems project</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+</script>
+<script type="text/javascript" src="mathjax/MathJax.js"></script>
+
+<style>
+html, body {
+  padding: 1%;
+}
+h1 {text-align:center}
+h2 {
+  font-weight: bold;
+  background-color: #DDDDDD;
+  padding: .2em .5em;
+  margin-top: 1.5em;
+  border-top: 3px solid #666666;
+  border-bottom: 2px solid #999999;
+}
+</style>
+</head>
+<body>
+
+<noscript>
+<div style="color:#CC0000; text-align:center">
+<b>Warning: <a href="http://www.mathjax.org/">MathJax</a>
+requires JavaScript to process the mathematics on this page.<br />
+If your browser supports JavaScript, be sure it is enabled.</b>
+</div>
+<hr>
+</noscript>
+<blockquote>
+
+<h1>Werewolves and civilians using Dynamic Updates and Probabilities</h1>
+Our Multi-Agent Systems project is based on the game 'Weerwolven' and we model it using Epistemic logic with probabilities.
+
+<h2>Introduction</h2>
+<p>A popular party game under students is the werewolves game. The participants are divided into two mutually exclusive species: the humans and the werewolves. The goal for all players is to survive the game by eliminating all members of the other species. Only a small number of players are werewolves, which have the advantage that they know of every player to which group they belong. The game is turn-based, and each turn is divided in two parts: a day part and a night part.</p>
+
+<p>During the night only the werewolves are active(in a real-life version of the game the humans close their eyes), and they (silently) vote for a player to die. When the werewolves are able to reach consensus on which human to kill, then the human gets killed. The next day, this information is announced by the game host to all players and therefore will be common knowledge.</p>
+
+<p>During the day both species are active, they can discuss arbitrary things, but in our case they only communicate whom they suspect most of being a werewolf. At the end of a day, all players vote upon one player to be eliminated, which is not necessarily a werewolf. The player with the majority of the votes will die, and will leave the game.</p>
+
+<p>The game played by people has many different aspects e.g. lying, aggressive questioning and other tactics, depending on the interest of that player. In our system, it is common knowledge that if a werewolf says he suspects someone, that person is never a werewolf. Yet whenever a human does so, you can never be sure, since the human is not sure him/herself.</p>
+
+<p>In this project we will model this simplified version of the game using epistemic logic and run simulations. These simulations reveal which group has an advantage over the other group and help us research the influence of certain alterations to the game. One Kripke model is used to model the knowledge in the game. The Kripke model changes after a player is killed i.e. worlds in which the player existed to be of the different species will be removed. Every player will keep track of the other players' suspicions by asking questions before voting. These suspicions are stored and used for updating the player's own suspicions. Since each werewolf knows every player's role, their knowledge on the suspicions of others is used to find out which human spreads the most truthful facts about who is a werewolf.</p>
+
+The game uses the principle of informed minority versus uninformed majority.
+
+<h2>The game model</h2>
+
+We model the game of Werewolves and Civilians with four players. One of these four players is assigned the role of werewolf. The game is modelled using Dynamic Epistemic Logic.
+
+
+<h2>Initial model</h2>
+To model the game we use a <i>Kripke model</i> $M = < S, R^A, V^P >$.
+We first define the set of agents $Ag = \{1, 2, 3, 4\}$. The propositional properties is defined as the following set: $P = \{ p_i \mid i \in Ag \}$, where $p_i$ stands for `agent $i$ is a werewolf'. Our initial model contains the following set of worlds $ S = \{ w_1, w_2, w_3, w_4 \}$. We define the accessibility relation 
+\begin{align*}
+
+R^A =  \{ & 1 \rightarrow \{(w_1, w_1), (w_1, w_2), (w_1, w_3), (w_1, w_4)\}, \\ 
+ & 2 \rightarrow \{(w_2, w_1), (w_2, w_2), (w_2, w_3), (w_2, w_4)\}, \\
+ & 3 \rightarrow \{(w_3, w_1), (w_3, w_2), (w_3, w_3), (w_3, w_4)\}, \\
+ &  4 \rightarrow \{(w_4, w_1), (w_4, w_2), (w_4, w_3), (w_4, w_4)\}
+ \}. 
+\end{align*}
+Note that our initial model is fully connected since the players do not know what their role is. Furthermore we define the valuation function as $V^P = \{ p_1 \rightarrow \{w_1\}, p_2 \rightarrow \{w_2\}, p_3 \rightarrow \{w_3\}, p_4 \rightarrow \{w_4\} \}$. We visualize the defined Kripke model in Fig. 1. 
+
+<div style="text-align:center">
+  <img src="../initial.png" width="" height="" alt="Initial state" /><br />
+  <small><i>Fig 1. The initial Kripke model</i></small>
+</div>
+
+<h2>Dynamic Epistemic Logic and the update rule</h2>
+In this project we use general update models as proposed by Baltag, Moss and Solecki [1]. In this way we are able to model an event in which there is uncertainty for an agent which of the events actually occurs. Events are formally modelled by an update model $A = (E, \sim, pre)$ such that
+<ul>
+<li>$E$ is a non-empty finite set of possible events</li>
+<li>$\sim$ is a set of equivalence relations $\sim_i$ on E for each agent $i \in Ag$  
+<li>$pre$ assign a formula from $L$ to each event $e \in E$
+</ul>
+The preconditions $pre$ map an (propositional) formula $p$ to a possible event $e$. It encodes the information in a possible event since $p$ hold when event $e$ occurred. The indistinguishability relations $\sim_i$ for each agent $i$ allows for uncertainty about which event actually occurs. For example $e_1 \sim_i e_2$ should be interpreted as "given $e_1$ occurs, it is consistent with agent $i$'s information that $e_2$ occurs". We point out that this indistinguishability relations can be different for each agent. In later sections we will show examples of update models for the werewolves game. For now we focus on how we can update an epistemic kripke models by the product update rule.<br />
+<br />
+Given an epistemic model $M$ and an update model $A$, the product update rule is defined as $M \times A = (S', \sim', V')$ where
+<ul>
+<li>$S' = \{(s, e) \mid s\in S, e\in E \text{ and } M, s \models pre_e \}$</li>
+<li>$(s_1, e_1) \sim'_i (s_2, e_2) \text{ iff } s_1 \sim_i s_2 \text{ and } e_1 \sim_i e_2$</li>
+<li>$V'(p) = \{(s, e) \in S' \mid s \in V(p) \}$</li>
+</ul>
+The worlds of $M \times A$ are the cartesian product of the worlds in $S$ and the events in $E$. Worlds are, however, only included in the updated model when the information in event $e$ is consistent with the information in world $s$. The indistinguishability relation of the new model depends on the indistinguishable relation of the old model <i>and</i> the event. Namely, an agent can not distinguish $(s_1, e_1)$ from $(s_2, e_2)$ in the new model if the agent could not distinguish worlds $s_1$ and $s_2$ in the old model and events $e_1$ and $e_2$. Finally, the truth values of the propositional variables of the world $(s, e)$ are the propositional variables that are true in $s$. This means that values of propositional values do not change during an epistemic event. 
+
+<h2>Start of the game</h2>
+<p>Every player is dealt one card. One of these four cards is the werewolf card. This model describes the event that player $i$ is viewing his/her dealt card. Player $i$ therefore believes with probability one that his/her card is the werewolf or human card depending on which card he/she is dealt. The other players only see player $i$ having a look at his/her card. This event takes place for every player in the game.</p>
+
+<p>As a sidenote: <br/>$(1..4)\backslash i: 3/4$ should be interpreted as: The players in the set difference of $\{ 1,2,3,4\}$ and $\{i\}$ believe with probability $\frac{3}{4}$.</p>
+<div style="text-align:center">
+  <img src="../models/turncards.png" width="" height="" alt="Initial 1state" />
+</div>
+
+<h2>Public announcements</h2>
+Player $i$ is killed and he/she was a werewolf. This is a public announcement resulting in the following event where all players believe with a probability of one that player $j$ is the werewolf.
+<div style="text-align:center">
+  <img src="../publicDeathWerewolf.png" width="" height="" alt="Player i is killed en was a werewolf" />
+</div>
+
+Player $i$ is killed and he/she was a human. This is a public announcement resulting in the following event where all players believe with a probability of zero that player $j$ is the werewolf.
+<div style="text-align:center">
+  <img src="../publicDeathHuman.png" width="" height="" alt="Player i is killed en was a human" />
+</div>
+
+<h2>Private messages</h2>
+Player $2$ assumes player $1$ is a werewolf, and believes this with chance $p$.
+<div style="text-align:center">
+  <img src="../models/messageReceiverWerewolf.png" width="75%" height="" alt="Player 2 assumes player 1 is a werewolf, and believes this with chance p" />
+</div>
+
+Player $2$ assumes player $1$ is a human, and believes this with chance $1-p$.
+<div style="text-align:center">
+  <img src="../models/messageReceiverHuman.png" width="75%" height="" alt="Player 2 assumes player 1 is a human, and believes this with chance 1-p" />
+</div>
+
+Relations for all the other players are $1/(n-1)$ for all other players.
+<div style="text-align:center">
+  <img src="../models/messageOthers.png" width="55%" height="" alt="Relations for all the other players are 1/(n-1) for all other players." />
+</div>
+
+</blockquote>
+
+    <script src="jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>

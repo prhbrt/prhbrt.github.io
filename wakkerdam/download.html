@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Werewolves and Civilians - A Multi-Agent Systems project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<script type="text/javascript" src="scripts/shCore.js"></script>
+	<script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+	<script type="text/javascript" src="scripts/shBrushPython.js"></script>
+	<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+
+
+
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="jquery.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        updates = [
+                    { name: "game-initial", caption: "Initial Kripke model"},
+                    { name: "game-after-1-draws", caption: "Player 0 views his/her card"},
+                    { name: "game-after-2-draws", caption: "Player 1 views his/her card"},
+                    { name: "game-after-3-draws", caption: "Player 2 views his/her card"},
+                    { name: "game-after-4-draws", caption: "Player 3 views his/her card"},
+                    { name: "game-after-one-death", caption: "Player 2 is killed during the night"},
+                    { name: "game-after-one-leak", caption: "The quizmaster whispers to player 0"},
+                    { name: "game-after-second-death", caption: "Player 1 is the victim of the killing during the day"}
+                  ];
+
+        var current = 0;
+        var prev = $("#prev");
+        var next = $("#next");
+        changeImage();
+
+        prev.click(function() {
+          if (current > 0) {
+            current--;
+            changeImage();
+            if (current == 0)
+              prev.addClass('disabled');
+            if (current == updates.length - 2)
+              next.removeClass('disabled');
+          }
+        });
+
+        next.click(function() {
+          if (current < (updates.length - 1)) {
+            current++;
+            changeImage();
+            if (current == 1)
+              prev.removeClass('disabled');
+            if (current == updates.length - 1)
+              next.addClass('disabled');
+          }
+        });
+
+        function changeImage() {
+          var update = updates[current];
+          $("#demo").html("<img src=\"demo\/" + update.name + ".png\"\/>");
+          $("#demo-legend").html("<img src=\"demo\/" + update.name + "-legend.png\"\/>");
+          $("#demo-caption").html(update.caption);
+        }
+        
+      });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+      });
+    </script>
+    <script type="text/javascript" src="mathjax/MathJax.js"></script>
+
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Werewolves and Civilians - A Multi-Agent Systems project</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li><a href="index.html">Introduction</a></li>
+                <li><a href="del.html">Dynamic Epistemic Logic</a></li>
+                <li class="active"><a href="implementation.html">Implementation</a></li>
+                <li><a href="results.html">Conclusion and future work</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+      <div class="row">
+        <div id="content" class="span8 offset1">
+          <h1>Installation and Download</h1>
+          <p> First download this file: <a href="Wakkerdam.py">Wakkerdam.py</a>.
+          <p>We are assuming you already installed python (version 2.x). On ubuntu, install some required libaries like this:</p>
+          <pre>
+sudo apt-get install libgv-python
+sudo apt-get install python-pygraphviz</pre>
+          <p>These packages are not installed on the wingtip systems. In general the libgv package is installed by installing graphviz (http://www.graphviz.org/) with python support. If not installed, the system will work when the "import gv" is removed and graph drawing functionalities are not used.</p>
+          <p>Python 3 does not support the graphviz library we use.</p>
+          <p>Run like this:</p>
+          <pre>
+python Wakkerdam.py</pre>
+<p> Or: </p>
+          <pre>
+python2.x Wakkerdam.py</pre>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; 2013 Herbert Kruitbosch, Harm de Vries en Mark Scheeve</p>
+      </div>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
