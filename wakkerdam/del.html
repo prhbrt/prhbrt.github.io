@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Werewolves and Civilians - A Multi-Agent Systems project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="jquery.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+      });
+    </script>
+    <script type="text/javascript" src="mathjax/MathJax.js"></script>
+
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Werewolves and Civilians - A Multi-Agent Systems project</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li><a href="index.html">Introduction</a></li>
+                <li class="active"><a href="del.html">Dynamic Epistemic Logic</a></li>
+                <li><a href="implementation.html">Implementation</a></li>
+                <li><a href="results.html">Conclusion and future work</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+      <div class="row">
+        <div id="content" class="span8 offset1">
+          <h1>Dynamic Epistemic Logic</h1>
+    
+          <p> In this section we explain the necessary background on Dynamic Epistemic Logic. We assume that the reader is familiar with ordinary Kripke models for Epistemic Logic. We model a simplified version of the game Werewolves having four players, where one of these players is a werewolf. We first define an initial epistemic Kripke model for this particular setting. Then introduce a formal update model for epistemic logic which allows for systematic updates of an epistemic kripke model. We work out a duynamic update explicitly for the event of turning a card which determines the role of a player. Finally we specify update models for the other events in the werewolves and civilians game. </p>
+
+          <h2>Initial model</h2>
+          <p>To model the game we use a <i>Kripke model</i> $M = < S, R^A, V^P >$.
+          We first define the set of agents $Ag = \{0, 1, 2, 3\}$. The propositional properties are defined as the following set: $P = \{ p_i \mid i \in Ag \}$, where $p_i$ stands for `agent $i$ is a werewolf'. Our initial model contains the following set of worlds $ S = \{ w_0, w_1, w_2, w_3 \}$. We define the accessibility relation
+          \begin{align*}
+
+          R^A =  \{ & i \rightarrow \{(v, w) : v,w\in S\} : i\in\{0,1,2,3\}\} \\ 
+          \end{align*}
+<!--          \begin{align*}
+
+          R^A =  \{ & 0 \rightarrow \{(w_0, w_0), (w_0, w_1), (w_0, w_2), (w_0, w_3)\}, \\ 
+           & 1 \rightarrow \{(w_1, w_0), (w_1, w_1), (w_1, w_2), (w_1, w_3)\}, \\
+           & 2 \rightarrow \{(w_2, w_0), (w_2, w_1), (w_2, w_2), (w_2, w_3)\}, \\
+           &  3 \rightarrow \{(w_3, w_0), (w_3, w_1), (w_3, w_2), (w_3, w_3)\}
+           \}. 
+          \end{align*}--></p>
+
+          <p>Note that our initial model is fully connected since the players do not know what their role is. Furthermore we define the valuation function as $V^P = \{ p_0 \rightarrow \{w_0\}, p_1 \rightarrow \{w_1\}, p_2 \rightarrow \{w_2\}, p_3 \rightarrow \{w_3\} \}$. We visualize the defined Kripke model in Figure 1.</p> 
+
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="init.png" width="60%" alt="Card turning update model" /></div>
+              <div class="span2"><img src="init-legend.png" width="100%" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 1. Initial epistemic Kripke model</i></small>
+          </div>
+
+    			<h2>Dynamic updates</h2>
+    			<p>In this project we use general update models as proposed by Baltag, Moss and Solecki [1]. In this way we are able to model an event in which there is uncertainty for an agent which of the events actually occurs. Events are formally modelled by an update model $A = (E, \sim, pre)$ such that</p>
+    			<ul>
+    			<li>$E$ is a non-empty finite set of possible events</li>
+    			<li>$\sim$ is a set of equivalence relations $\sim_i$ on $E$ for each agent $i \in Ag$  
+    			<li>$pre$ assign a formula from a logical language $L$ to each event $e \in E$
+    			</ul>
+    			<p>
+    			The preconditions $pre$ maps a (propositional) formula $p$ to a possible event $e$. It encodes the information in a possible event since $p$ holds when event $e$ occurred. The indistinguishability relations $\sim_i$ for each agent $i$ allow for uncertainty about which event actually occurs. For example $e_1 \sim_i e_2$ should be interpreted as: `given $e_1$ occurs, it is consistent with agent $i$'s information that $e_2$ occurs'. We point out that this indistinguishability relations can be different for each agent. In later sections we will show examples of update models for the werewolves game. For now we focus on how we can update an epistemic Kripke model by the product update rule.</p>
+    			<p>
+    			Given an epistemic model $M$ and an update model $A$, the product update rule is defined as $M \times A = (S', \sim', V')$ where</p>
+    			<ul>
+    			<li>$S' = \{(s, e) \mid s\in S, e\in E \text{ and } M, s \models pre_e \}$</li>
+    			<li>$(s_1, e_1) \sim'_i (s_2, e_2) \text{ iff } s_1 \sim_i s_2 \text{ and } e_1 \sim_i e_2$</li>
+    			<li>$V'(p) = \{(s, e) \in S' \mid s \in V(p) \}$</li>
+    			</ul>
+    			<p>
+    			The worlds of $M \times A$ are the cartesian product of the worlds in $S$ and the events in $E$. Worlds are, however, only included in the updated model when the information in event $e$ is consistent with the information in world $s$. The indistinguishability relation of the new model depends on the indistinguishable relation of the old model <i>and</i> the event. Namely, an agent can not distinguish $(s_1, e_1)$ from $(s_2, e_2)$ in the new model if the agent could not distinguish worlds $s_1$ and $s_2$ in the old model and events $e_1$ and $e_2$. Finally, the truth values of the propositional variables of the world $(s, e)$ are the propositional variables that are true in $s$ i.e. values of propositional variables do not change during an epistemic event. </p>
+    			
+          <p>Note that the new model is also an S5 Kripke model since the accessibility relations over the events are defined as equivalence relations. In case we drop this requirement we would still have a valid update model, but we can not expect that the resulting Kripke model satifies the S5 axioms. As a last remark we point out that these update models can easily lead to combinatorial explosion due to the cartesian product. Therefore we limit the number of agents and events in this project. In the next section we give a detailed example of a dynamic update. </p>
+
+          <h2>View card event</h2>
+          <p>Every player is dealt one card. One of these four cards is the werewolf card. This model describes the event that player $i$ is viewing his/her dealt card. The other players only see player $i$ having a look at his/her card. The exact formalization of this event depends on which player views his card, but without loss of generalization we assume that player $0$ views his card. </p>
+
+          <p>We define the card turning action model to have the following set of events $E = \{WerewolfCard, HumanCard\}$ and preconditions $pre(WerewolfCard) = p_i$ and $pre(HumanCard) = \neg p_i$. The distinguishability relation for player $i$ which views(and thus knows) his card:<br /> 
+          \begin{align*}\sim_0 = 
+          \{
+          &(WerewolfCard, WerewolfCard)\\
+          &(HumanCard, HumanCard)\}
+          \end{align*}
+          
+          And for players $\{j \mid j\in Ag \text{ and }  j \neq 0\}$ which see player $0$ viewing his card but do not know which card, we have the following distinguishability relation:
+          \begin{align*}\sim_j = 
+          \{
+          &(WerewolfCard, WerewolfCard)\\
+          &(HumanCard, HumanCard)\\
+          &(HumanCard, WerewolfCard)\\
+          &(WerewolfCard, HumanCard)
+          \}
+          \end{align*}
+
+          We visualize the defined card turning update model for player $0$ viewing his/her card in Figure 2. In the legend on the right we specify for which agents the colored arrow is in the indistinguishability relation. </p>
+          
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="turn_card_action.png" width="100%" alt="Card turning update model" /></div>
+              <div class="span2"><img src="turn_card_action-legend.png" width="100%" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 2. Card turning update model</i></small>
+          </div>
+		      
+          <p>We work out in detail the dynamic update for this event on the initial Kripke model. We first consider the cartesian product of the worlds of the old model and the events
+          \begin{align*}
+          S \times E = \{&(w_0, WerewolfCard), (w_0, HumanCard)\\
+                & (w_1, WerewolfCard), (w_1, HumanCard)\\
+                & (w_2, WerewolfCard), (w_2, HumanCard)\\
+                & (w_3, WerewolfCard), (w_3, HumanCard)\}. 
+          \end{align*}
+          We visualize the possible worlds in Figure 3.</p>
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="../models/update_example1.png" width="100%" alt="Cartesian product of worlds and events" /></div>
+            </div>
+            <small><i>Figure 3. Cartesian product of worlds and events</i></small>
+          </div>
+          <p>To check if the world $(w_0, WerewolfCard)$ is in $S'$ we verify if the $pre(WerewolfCard) = p_0$ is consistent with the information in world $w_0$. Indeed it holds that $M, w_0 \models p_0$ and hence $(w_0, WerewolfCard) \in S'$. To verify whether $(w_0, HumanCard) \in S'$ we check if $pre(HumanCard) = \neg p_0$ is consistent with the information in world $w_0$. In this case it holds that $M, w_0 \not\models \neg p_0$, and thus $(w_0, HumanCard) \not \in S'$. With little effort we come to the following sets of worlds
+          \begin{equation*}S' = \{(w_0, WerewolfCard), (w_1, HumanCard), (w_2, HumanCard), (w_3, HumanCard)\}.\end{equation*}
+          We show the model after eliminating inconsistent worlds in Figure 4. </p>
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="../models/update_example2.png" width="100%" alt="Eliminated worlds" /></div>
+            </div>
+            <small><i>Figure 4. Eliminate inconsistent worlds</i></small>
+          </div>
+          This confirms our expectation that when player $0$ is a werewolf he must view a werewolf card, while he must see a human card when he is not a werewolf. Moreover we notice that the number of worlds does not increase in this update. 
+          </p> 
+          <p>
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="../models/update_example3.png" width="100%" alt="Indistinguishable relations" /></div>
+              <div class="span2"><img src="../models/example_update_legend.png" width="70%" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 5. Indistinguishable relations</i></small>
+          </div>
+          We now determine the new indistinguishability relation for $M \times A$. In Figure 5 we show the indistinguishability relation for events rendered by dashed lines and the indistinguishability relation for the old worlds rendered by solid lines. Recall that new worlds are indistinguishable for player $i$ when there is an arrow in the indistinguishability relation of the worlds and the event. In other words, the arrow is in the new indistinguishability relation when there is a dashed line and a solid line in Figure 5 for player $i$. As an example we verify if the worlds $(w_0, WerewolfCard)$ and $(w_1, HumanCard)$ are indistinguishable for player $0$.  Since the initial Kripke model was fully connected we have that $w_0 \sim_0 w_1$ . The events $WerewolfCard$ and $HumanCard$ are, however, distinguishable for player $0$. Hence $((w_0, WerewolfCard), (w_1, HumanCard)) \not \in\ \sim_0$. When we consider the worlds $(w_1, HumanCard)$ and $(w_2, HumanCard)$, we see that these worlds are indistinguishable since $w_1 \sim_0 w_2$ and $HumanCard \sim_0 HumanCard$. So we conclude for player $0$ the worlds in which he is not a werewolf are indistinguishable. For players $1, 2, 3$ all worlds in the new model are indistinguishable, since all old worlds and all events were indistinguishable for them. We show the final result of this update in Figure 6. Moreover, we show 
+          </p>
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="../models/update_example4.png" width="100%" alt="Updated model" /></div>
+              <div class="span2"><img src="../models/example_update_legend2.png" width="70%" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 6. Updated model $M \times A$</i></small>
+          </div>
+          
+          <h2>Night killing event</h2>
+          <p>During the night the werewolf kills one of the humans. The next day the quizmaster announces which human player was killed during the night. All players receive this information and it is therefore a public announcement. The set of events $E = \{DeathOfHuman\}$ contains only one event with the corresponding $pre(DeathOfHuman) = \neg p_i$. There is only one event because a werewolf can not kill himself. </p>
+          <p>The indistinguishability relation is equal for all players $\{i \mid i \in Ag \}$:
+          \begin{align*}
+          \sim_i = & \{ (DeathOfHuman, DeathOfHuman)\}
+          \end{align*}
+          We visualize this event in Figure 7. 
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="kill_night.png" width="50%" alt="Night killing update model" /></div>
+              <div class="span2"><img src="kill_night-legend.png" width="100%" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 7. Night killing update model</i></small>
+          </div>
+          
+          <h2>Quizmaster leak event</h2>
+          <p>During the day the trusted, i.e. speaking the truth, quizmaster leaks information about who is the werewolf to one of the players. The quizmaster knows the role of each player, and may whisper to player $i$ that player $j$ is <i>not</i> a werewolf. We assume that all other players see the quizmaster whispering to player $i$,  but they can not hear what is said. Moreover, it is possible that the quizmaster does not tell any information to player $i$. </p>
+
+          <p>We consider the case that the quizmaster whispers to player $0$. We exclude the possibility that quizmaster tells player $0$ that player $0$ is a werewolf, since that would not make much sense. We then have the following set of events \begin{equation*}E = \{Nothing, NotWerewolf1, NotWerewolf2, NotWerewolf3\}\end{equation*} with the following preconditions
+            \begin{align}
+                &pre(Nothing) &=& T\\
+                &pre(NotWerewolf1) &=& \neg p_1\\
+                &pre(NotWerewolf2) &=&\neg p_2\\
+                &pre(NotWerewolf3) &=& \neg p_3.\\
+            \end{align}
+          In case the quizmaster does not give any information he communicated the `useless' proposition true. 
+          </p>
+          <p>
+          Player $0$ knows exactly which of the four events occurs. Hence 
+          \begin{align}
+          \sim_0 = \{&(Nothing, Nothing), (NotWerewolf1, NotWerewolf1),\\
+           &(NotWerewolf2, NotWerewolf2), (NotWerewolf3, NotWerewolf3)\}. 
+          \end{align}   
+          For players $\{j \mid j\in Ag \text{ and }  j \neq 0\}$ we can not distinguish between the four events. Hence we have a fully connected indistinguishability relation on $E$ for these players 
+          \begin{equation}
+          \sim_j = E \times E. 
+          \end{equation}
+          </p>
+
+          <p> We visualize the event in Figure 8. </p>
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="quizmasterslips2.png" width="100%" alt="Quizmaster leaking update model" /></div>
+              <div class="span2"><img src="quizmasterslips2-legend.png" width="100%" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 8. Quizmaster leaking update model</i></small>
+          </div>
+          
+          <h2>Day killing event</h2>
+          <p>During the day all players vote which player should be killed. The player with majority of the votes is eliminated. This is again a public announcement of a death, but here we include the possibility that a werewolf is killed. Without loss of generalization we assume that player $0$ is killed. </p>
+
+          <p>
+          We have the following set of events $E = \{DeathOfWerewolf, DeathOfHuman\}$ with the preconditions $pre(DeathOfWerewolf) = p_0$ and $pre(DeathOfHuman) = \neg p_0$. Since the event is announced by the quizmaster all players know which role the player had. Hence the events are distinguishable for all players:
+          \begin{align*}
+          \sim_i = \{&(DeathOfWerewolf, DeathOfWerewolf)\\ 
+                  &(DeathOfHuman, DeathOfHuman) \}
+          \end{align*}
+          </p>
+
+          <p>We visualize the event in Figure 9.
+
+          <div style="text-align:center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="daykilling.png" width="100%" alt="Quizmaster leaking update model" /></div>
+              <div class="span2"><img src="daykilling-legend.png" width="100%" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 9. Day killing update model</i></small>
+          </div>
+
+          
+
+          <h2>References</h2>
+          [1] Baltag, A., Moss, L. S., &amp; Solecki, S. (1998, July). The logic of public announcements, common knowledge, and private suspicions. <i>In Proceedings of the 7th conference on Theoretical aspects of rationality and knowledge (pp. 43-56)</i>. Morgan Kaufmann Publishers Inc..
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; 2013 Herbert Kruitbosch, Harm de Vries en Mark Scheeve</p>
+      </div>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

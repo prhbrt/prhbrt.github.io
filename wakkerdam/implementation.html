@@ -1,0 +1,646 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Werewolves and Civilians - A Multi-Agent Systems project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<script type="text/javascript" src="scripts/shCore.js"></script>
+	<script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+	<script type="text/javascript" src="scripts/shBrushPython.js"></script>
+	<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+
+
+
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="jquery.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        updates = [
+                    { name: "game-initial", caption: "Initial Kripke model"},
+                    { name: "game-after-1-draws", caption: "Player 0 views his/her card"},
+                    { name: "game-after-2-draws", caption: "Player 1 views his/her card"},
+                    { name: "game-after-3-draws", caption: "Player 2 views his/her card"},
+                    { name: "game-after-4-draws", caption: "Player 3 views his/her card"},
+                    { name: "game-after-one-death", caption: "Player 2 is killed during the night"},
+                    { name: "game-after-one-leak", caption: "The quizmaster whispers to player 0"},
+                    { name: "game-after-second-death", caption: "Player 1 is the victim of the killing during the day"}
+                  ];
+
+        var current = 0;
+        var prev = $("#prev");
+        var next = $("#next");
+        changeImage();
+
+        prev.click(function() {
+          if (current > 0) {
+            current--;
+            changeImage();
+            if (current == 0)
+              prev.addClass('disabled');
+            if (current == updates.length - 2)
+              next.removeClass('disabled');
+          }
+        });
+
+        next.click(function() {
+          if (current < (updates.length - 1)) {
+            current++;
+            changeImage();
+            if (current == 1)
+              prev.removeClass('disabled');
+            if (current == updates.length - 1)
+              next.addClass('disabled');
+          }
+        });
+
+        function changeImage() {
+          var update = updates[current];
+          $("#demo").html("<img src=\"demo\/" + update.name + ".png\"\/>");
+          $("#demo-legend").html("<img src=\"demo\/" + update.name + "-legend.png\"\/>");
+	  if(current==0) {
+		$("#demo-action").html("<p>Not applicable, first state.</p>");
+		$("#demo-action-legend").html("");
+	  } else {
+		$("#demo-action").html("<img src=\"demo\/" + update.name + "-action.png\"\/>");
+		$("#demo-action-legend").html("<img src=\"demo\/" + update.name + "-action-legend.png\"\/>");
+	  }
+          $("#demo-caption").html(update.caption);
+        }
+        
+      });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+      });
+    </script>
+    <script type="text/javascript" src="mathjax/MathJax.js"></script>
+
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Werewolves and Civilians - A Multi-Agent Systems project</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li><a href="index.html">Introduction</a></li>
+                <li><a href="del.html">Dynamic Epistemic Logic</a></li>
+                <li class="active"><a href="implementation.html">Implementation</a></li>
+                <li><a href="results.html">Conclusion and future work</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+      <div class="row">
+        <div id="content" class="span8 offset1">
+	<p><i>Installation and download: go <a href="download.html">here</a>.</i></p>
+          <h1>Implementation</h1>
+          <p>We visualize our Kripke model and update models as defined in the <a href="del.html">Dynamic Epistemic Logic</a> section by using Python code in combination with the <a href="http://www.graphviz.org/">Graphviz</a> library for Python. We first give a demonstration of the Werewolves and Civilians game by showing the initial Kripke model and allowing the user to step through the provided scenario to view the changes in the model.  Besides visualizing the graphs our code can also be used to prove higher order logic statements which we show by examples.</p>
+          
+          <h2>Scenario for Werewolves and Civilians</h2>
+          <p>We describe the game of Werewolves and Civilians by providing a possible scenario. In this scenario the game is played by four players using the following set of labels $\{ 0, 1, 2, 3 \}$. Since the players have not yet seen their role cards, the initial model is a fully connected graph as described in the <a href="del.html">Dynamic Epistemic Logic</a> section.
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-initial.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-initial-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 1. Initial epistemic Kripke model</i></small>
+          </div>
+
+          <h3>Players viewing cards</h3>
+          First player 0 views his card, then player 1, then player 2 and finally player 3. The corresponding update models are shown in Figures 2-5.</p>
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-after-1-draws-action.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-after-1-draws-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 2. Player 0 viewing his/her card</i></small>
+          </div>
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-after-2-draws-action.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-after-2-draws-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 3. Player 1 viewing his/her card</i></small>
+          </div>
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-after-3-draws-action.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-after-3-draws-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 4. Player 2 viewing his/her card</i></small>
+          </div>
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-after-4-draws-action.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-after-4-draws-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 5. Player 3 viewing his/her card</i></small>
+          </div>
+
+          <h3>Killing during the night</h3>
+          <p>The second event to occur is that player 2 is killed during the night. The update model is shown in Figure 6.</p>
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-after-one-death-action.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-after-one-death-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 6. Player 2 is killed during the night</i></small>
+          </div>
+
+          <h3>Quizmaster leaking</h3>
+          <p>The third event is that the quizmaster leaks (or not) information to player 0. The update model is shown in Figure 7.</p>
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-after-one-leak-action.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-after-one-leak-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 7. The quizmaster whispers to player 0</i></small>
+          </div>
+
+
+          <h3>Killing during the day</h3>
+          <p>The last event is that the voting round resulting in a majority of votes for player 1 who then is killed. The update model is shown in Figure 8.</p>
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="demo/game-after-second-death-action.png" alt="" /></div>
+              <div class="span2"><img src="demo/game-after-second-death-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 8. Player 1 is the victim of the killing during the day</i></small>
+          </div>
+
+          <h2>Demonstration</h2>
+          This demonstrates the scenario for the game of Werewolves and Civilians as described above. This demonstration is intended to give a concrete example of the result of a model and an update model.
+          <div class="text-center">
+            <div class="row">
+              <h3 id="demo-caption"></h3>
+              <button id="prev" style="float:left" type="button" class="btn btn-large btn-primary disabled"><i class="icon-arrow-left icon-white"></i> Previous</button>
+              <button id="next" style="float:right" type="button" class="btn btn-large btn-primary">Next <i class="icon-arrow-right icon-white"></i></button>
+            </div>
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div id="demo" class="span5"></div>
+              <div id="demo-legend" class="span2"></div>
+            </div>
+            <h3>Action model just used</h3>
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div id="demo-action" class="span5"></div>
+              <div id="demo-action-legend" class="span2"></div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<h2>Code</h2>
+	Our code is implemented a Kripke model and some action models for the werewolves and civilians game, in Python. Python allows for list comprehensions and partial applications on functions. Both will prove useful: List comprehensions allow us to make statements that are, regarding notation, very close to the definitions of such updates. Partial function application allows for defining methods which implement Knowledge-operators, like $K$. Regardless, lets start with the implementation for states in our Kripke model.
+	<h3>States, worlds, events and preconditions</h3>
+	Both Kripke models, for modeling the game and the events, have states. However, we call a state in the game model a <i>world</i> and we call the states in an event model <i>preconditions</i>. In our case, they can also be called events, since there is a <i>one-to-one</i> mapping between events and preconditions. These classes are represented like this:
+
+<pre class="brush:python">
+# A state implements the adjacency structure, which is the same for all
+# types of kripke models, since all of them are graphs.
+# 
+class State:
+	def isAdjacent(self, player, w):
+		return (w in self.adjacent[player])
+
+# Initializes a world where <i>werewolf</i> is a werewolf.
+# 
+class World(State):
+  def __init__(self, werewolf, model):
+      self.werewolf, self.model = (werewolf, model)
+  def isConsistent(self, precondition):  return precondition.isConsistent(self)
+
+# Initializes the precondition where <i>player</i> is a human
+# (isWerewolf==False) or a werewolf (isWerewolf==True).
+# The consistency of a world with this world is:
+#  - True if (the precondition specifies that a player is a werewolf) and
+#            (the player in the precondition equals the player the world
+#             states the werewolf is)
+#  - True if (the precondition specifies that a player is a human) and
+#            (the player in the precondition does not equal the player
+#             in the world states the werewolf is)
+#  - False otherwise
+#
+class Precondition(State):
+  def __init__(self, isWerewolf, player, model, label):
+		self.isWerewolf, self.player, self.model, self.label = (isWerewolf, player, model, label)
+  def isConsistent(self, world): return (self.player == world.werewolf) == self.isWerewolf
+  def __call__(self, s):         return self.isConsistent(s)
+
+# Sets a precondition that is consistent with every world, it encodes the event where nothing is said.
+# 
+class TruePrecondition(State):
+	def isConsistent(self, world): return True
+</pre>
+
+So now we have a basis to create worlds and preconditions, and check if they are <i>consistent</i>. This should give us the tools to define action and game models and use them to update a game model with an action model.
+
+<h3>Modeling the game, the actions and updating</h3>
+The code below defines how both models, for actions and the game, work. The code implements the update model which is described in <a href="del.html">Dynamic Epistemic Logic</a>.
+ic Logic
+
+<pre class="brush:python">
+# Representation of a kripke model, this class is extended by both the models
+# for the game and the action model.
+class Model:
+# Return for each tuple of worlds a relation, for one agent.
+    def fullyConnectedRelation(self):
+        return [(w1,w2) for w1 in self.worlds for w2 in self.worlds]
+# Returns for each world w the relation (w,w), and none more,
+# for one agent
+    def reflexiveRelation(self):
+        return [(w1,w1) for w1 in self.worlds]
+# Given that the relations are initialized in the model, each
+# agent gets a list of worlds which they can reach. This way
+# we can faster determine which agents are adjacent when we
+# calculate an updated model.
+    def initializeAdjacency(self):
+        for w in self.worlds: w.adjacent = [[] for i in range(len(self.relations))]
+        for r in range(len(self.relations)):
+            for (w1, w2) in self.relations[r]: w1.adjacent[r].append(w2)
+# This is a technical thing. We don't want one world object to be used by multiple models,
+# So they are duplicated. Moreover, we want a game model to only have a game model, and
+# remove the event models introduces by the cartesian product of worlds (when updating).
+# Also the relations are translated to this new set of worlds.
+    def filterGameWorlds(self):
+        worldMap, worlds = ({}, [])
+        for (game, action) in self.worlds:
+            newGameWorld = game.duplicate()
+            worldMap[(game, action)] = newGameWorld
+            worlds.append(newGameWorld)
+        self.worlds = worlds
+        self.relations = [ [(worldMap[(w1game, w1act)], worldMap[(w2game, w2act)]) for ((w1game,w1act),(w2game,w2act)) in rel ] for rel in self.relations]
+#
+# This is an <b>essential</b> method for an update. First, however, take a look at
+# <i>__mul__</i> a bit below, this method is used there. Assuming our model contains
+# the cartesian product of worlds and preconditions, we can determine which edges
+# are consistent with both models, e.g. exist in both models. The list of worlds
+# is assumed to be a tuple (world, precondition) such that the adjacency is still
+# initialized. This is a technicality, because this model its relations are yet
+# to be determined, so these adjacency links are <i>inconistent</i> with the
+# datastructure. This however is a technicality that is only important when we
+# want our model to be thread safe. Note, this is not the case.
+#
+# After the <i>if</i> in the <i>return</i> statement, we can see that only relations
+# existant in both the action and the game model are added.
+    def consistentRelation(self, player):
+        return [((w1game, w1act), (w2game, w2act)) for (w1game, w1act) in self.worlds for (w2game, w2act) in self.worlds if w1game.isAdjacent(player, w2game) and w1act.isAdjacent(player, w2act)]
+
+# Game Model
+class GameModel(Model):
+# This initialized the model like it should be when no cards have been turned, so
+# for each agent the relations are fully connected.
+    def __init__(self, n=None):
+        if n!=None:
+            self.worlds    = [World(i, self) for i in range(n)]
+            self.relations = [self.fullyConnectedRelation() for player in range(n)]
+            self.initializeAdjacency()
+#
+# This is the most important method, it allows for a game model g to be multiplied
+# with an action model a: new_g = g * a. This way we can create a model that models
+# the situation after such an update.
+#
+# Like the theory states, the cartesian product of worlds and preconditions is calculated.
+# But only if both are consistent. Then the relations which exist in both models are added.
+    def __mul__(self, other):
+        if(len(self.relations)!=len(other.relations)): raise Exception("The game model has %d agents, whereas the action model has %d agents. Both should have the same number of agents" % (len(self.relations), len(other.relations)))
+        result = GameModel()
+        result.worlds = [(w1, w2) for w1 in self.worlds for w2 in other.worlds if w1.isConsistent(w2)]
+        result.relations = [ result.consistentRelation(player) for player in range(len(self.relations))]
+        result.filterGameWorlds()
+        result.initializeAdjacency()
+        return result
+</pre>
+
+	<h3>Action models</h3>
+	Now that we have an update model, we should define some actions. They are listed below. Each such model defines preconditions and relations.
+<h4>A player turns his card</h4>
+<pre class="brush:python">
+# There are two preconditions, one for the player defining whether
+# the card shows that he is a werewolf, and one that he is not. The
+# player can distinguish between both, and has a symmetric relation.
+# Other players can not, and therefore have a fully connected relation.
+class TurnCard(ActionModel):
+	def __init__(self, player, n):
+		self.worlds = [Precondition(False,player,self,"HumanCard%d" % player), Precondition(True,player,self,"WerewolfCard%d" % player)]
+		self.relations = [ (self.reflexiveRelation() if player == p else self.fullyConnectedRelation()) for p in range(n)]
+		self.initializeAdjacency()
+</pre>
+<h4>A human is killed at night</h4>
+<pre class="brush:python">
+# At night, it is always the case that a human is killed, no
+# one considers the option that the werewolf will kill himself.
+# Therefore there is one state and all players have a symmetric
+# link from and to this state.
+class NightKilling(ActionModel):
+	def __init__(self, player, n, isWerewolf=False):
+		self.worlds = [Precondition(isWerewolf,player,self, "DeathOfWerewolf%d" % player if isWerewolf else "DeathOfHuman%d" % player)]
+		self.relations = [self.reflexiveRelation() for p in range(n)]
+		self.initializeAdjacency()
+</pre>
+<h4>A creature is killed during the day</h4>
+<pre class="brush:python">
+# During the day, both a human and a werewolf can be killed. For
+# a certain player that gets killed only of them is considered
+# possible, depending on whether he is a werewolf in a game state.
+# The action model contains both, but since it is a public announcement,
+# All players can distinguish between them.
+class DayKilling(ActionModel):
+	def __init__(self, player, n):q
+		self.worlds = [Precondition(True,player,self,"DeathOfWerewolf%d" % player),Precondition(False,player,self,"DeathOfHuman%d" % player)]
+		self.relations = [self.reflexiveRelation() for p in range(n)]
+		self.initializeAdjacency()
+</pre>
+<h4>The quiz master fails by leaking information</h4>
+<pre class="brush:python">
+# The quiz master leaks information about who is not a werewolf from time to
+# time to one player. If this happens everyone can see this and everyone
+# can see to whom it is leaked, but only one player actually hears what is
+# leaked.
+# However, from time to time the quiz master does not leak something, but the
+# players do consider it possible. hence the truth state.
+# So players never think nothing is leaked when there was a leak, but if
+# they think something is leaked, they are not sure.
+class QuizMasterSlip(ActionModel):
+    def __init__(self, receiver, n):
+        truth = TruePrecondition()
+        messages = [truth] + [Precondition(False, p, self, "notWerewolf%d" % p) for p in range(n) if p is not receiver]
+        self.worlds = messages
+        self.relations = [(self.reflexiveRelation() if p == receiver else self.fullyConnectedRelation()) for p in range(n)]
+        self.initializeAdjacency()
+</pre>
+
+<h3>Model types</h3>
+We also implemented some methods to check whether we still have an $S_5$ model. Initially the game model is $S_5$, but can become $not\;S_5$ when $not\; S_5$ actions are executed. Therefore we have some methods to check this, listed below.
+<pre class="brush:python">
+class Model(GraphPrinter, GraphDrawer):
+    def isReflexive(self, player):
+        return reduce(lambda x,y: x and y, [(x,x) in self.relations[player] for x in self.worlds ])
+    def isSymmetric(self, player):
+        return reduce(lambda x,y: x and y, [(x,y) in self.relations[player] for (y,x) in self.relations[player]])
+    def isTransitive(self, player):
+        return reduce(lambda x,y: x and y, [(r,u) in self.relations[player] for (r,s) in self.relations[player] for (t,u) in self.relations[player] if s==t])
+    def isS5(self, player=None):
+        if player==None: return [self.isS5(p) for p in range(len(self.relations))]
+        else: return self.isReflexive(player) and self.isSymmetric(player) and self.isTransitive(player)
+</pre>
+
+
+<h3>Epistemic Formulas</h3>
+So now we have a model, but can we do higher order epistemic logic with it? Yes we can! We implemented this using partial application of functions. It is easy to
+check for a precondition whether it holds in a world, we did this by making the precondition <i>callable</i>. Hence a precondition can be called like this:
+
+<pre class="brush:python">
+
+# Callable to check if a world is consistent.
+class Precondition(State):
+  def __call__(self, s):         return self.isConsistent(s)
+</pre>
+
+We can execute this by testing whether ww(0) and ww(1) hold in the first world like this
+
+<pre class="brush:python">
+>>> from Wakkerdam import *
+>>> game = GameModel(4)
+>>> game.worlds[0] <<itholdsthat>> game.ww(0)
+True
+>>> game.worlds[0] <<itholdsthat>> game.ww(1)
+False
+>>> 
+</pre>
+
+But this is not higher order logic, so lets implement $K$ and $M=not\; K\; not$, this is done below. Two important features are that if no world is specified, a function is returned that takes one argument, a world, and returns a boolean. This way we can build up expressions using <i>or</i> and <i>and</i>. We will provide tools shortly.
+
+<pre class="brush:python">
+class Model(GraphPrinter, GraphDrawer):
+# Does the expression hold in all words reachable from <i>world</i>?
+# If no world is returned, the function is returned partially applied on the expression
+# it should evaluate. otherwise it is evaluated for each world and null is returned.
+# There is a special case when world==True, then <i>K expr</i> is evaluated for all worlds
+# of the Kripke model.
+    def K(self, player, expr, world=None):
+        if(world==True): return reduce(lambda x,y: x and y,  [self.K(player,expr,w) for w in self.worlds])
+        if world==None: return functools.partial(self.K, player, expr)
+        return reduce(lambda x,y: x and y, [True] + [expr(w) for (v,w) in self.relations[player] if v==world])
+#
+# The same as K, but now the expression should hold in one world only.
+    def M(self, player, expr, world=None):
+        if(world==True): return reduce(lambda x,y: x and y,  [self.M(player,expr,w) for w in self.worlds])
+        if world==None: return functools.partial(self.M, player, expr)
+        return reduce(lambda x,y: x or y,  [False] + [expr(w) for (v,w) in self.relations[player] if v==world])
+</pre>
+
+Then we have some <i>tools</i> to create expressions:
+
+<pre class="brush:python">
+# Define shortcuts to game.K (namely K), game.M (...), etc
+# Also introduces kor (Kripke or), kand and knot, allowing us to use these binary operators in our expressions.
+def regarding(game):
+    global K,M,ww,notww,kor,kand
+    def K(player, expr, world=None): return game.K(player, expr, world)
+    def M(player, expr, world=None): return game.M(player, expr, world)
+    def ww(player): return game.ww(player)
+    def notww(player): return game.notww(player)
+    kor = Infix(lambda f,g: (lambda x: reduce(lambda x,y: x and y, [(f(w) or g(w)) for w in game.worlds]) if(x==True) else f(x) or g(x)))
+    kand = Infix(lambda f,g: (lambda x: reduce(lambda x,y: x and y, [(f(w) and g(w)) for w in game.worlds]) if(x==True) else f(x) and g(x)))
+</pre>
+
+We can use these for some neat formulas:
+
+<pre class="brush:python">
+def pp(x): return "yes" if x else "no"
+
+def main():
+    players = 4;
+    game = GameModel(players)
+    regarding(game)
+    for p0 in range(players):
+        v= True <<itholdsthat>> K(p0, ww(0) <<kor>> ww(1) <<kor>> ww(2) <<kor>> ww(3))
+        print "Does player %d know that there is a werewolf?"  % p0, pp(v)    
+    
+    for player in range(players): game = game * TurnCard(player, players)
+    regarding(game)    
+    for p0 in range(players):
+        v = True <<itholdsthat>> (K(p0, ww(p0)) <<kor>> K(p0, notww(p0)))
+        print "Is player %d creature aware?"  % p0, pp(v)
+        for p1 in range(players):
+            v = True <<itholdsthat>> K(p0, (K(p1, ww(p1)) <<kor>> K(p1, notww(p1))))
+            print " - Does player %d know that player %d is creature aware?"  % (p1, p0), pp(v)
+    
+    print "Considering this worlds: %s" % game.worlds[2]
+    for p0 in range(players):
+        
+        v= True <<itholdsthat>> (K(p0, ww(0)) <<kor>> K(p0, ww(1)) <<kor>> K(p0, ww(2)) <<kor>> K(p0, ww(3)))
+        v= game.worlds[2] <<itholdsthat>> (K(p0, ww(0)) <<kor>> K(p0, ww(1)) <<kor>> K(p0, ww(2)) <<kor>> K(p0, ww(3)))
+        print " - Does player %d know who the werewolf is?"  % p0, pp(v)
+
+#Some artifacts the syntax highlighter introduces:
+</pre>
+
+We now check these:
+
+<p>(1) $M\models K_i(p_0\;or\;p_1\;or\;p_2\;or\;p_3)$</p>
+
+<p>(2) $M\models K_i(p_i)\;or\;K_i(not\;p_i)$</p>
+
+<p>(3) $M\models K_j(K_i(p_i)\;or\;K_i(not\;p_i))$</p>
+
+<p>(4) $M_{w_2}\models K_i(p_0)\;or\;K_i(p_1)\;or\;K_i(p_2)\;or\;K_i(p_3)$
+
+<pre class="brush:python">
+<i>Initially, does it hold that (1)</i>
+Does player 0 know that there is a werewolf? yes
+Does player 1 know that there is a werewolf? yes
+Does player 2 know that there is a werewolf? yes
+Does player 3 know that there is a werewolf? yes
+<i>After everyone drew a card, does it hold that, does it hold that (2) and (3)?</i>
+Is player 0 creature aware? yes
+ - Does player 0 know that player 0 is creature aware? yes
+ - Does player 1 know that player 0 is creature aware? yes
+ - Does player 2 know that player 0 is creature aware? yes
+ - Does player 3 know that player 0 is creature aware? yes
+Is player 1 creature aware? yes
+ - Does player 0 know that player 1 is creature aware? yes
+ - Does player 1 know that player 1 is creature aware? yes
+ - Does player 2 know that player 1 is creature aware? yes
+ - Does player 3 know that player 1 is creature aware? yes
+Is player 2 creature aware? yes
+ - Does player 0 know that player 2 is creature aware? yes
+ - Does player 1 know that player 2 is creature aware? yes
+ - Does player 2 know that player 2 is creature aware? yes
+ - Does player 3 know that player 2 is creature aware? yes
+Is player 3 creature aware? yes
+ - Does player 0 know that player 3 is creature aware? yes
+ - Does player 1 know that player 3 is creature aware? yes
+ - Does player 2 know that player 3 is creature aware? yes
+ - Does player 3 know that player 3 is creature aware? yes
+Considering this worlds: player 2 is the werewolf
+ - Does player 0 know who the werewolf is? (4) no
+ - Does player 1 know who the werewolf is? (4) no
+ - Does player 2 know who the werewolf is? (4) yes
+ - Does player 3 know who the werewolf is? (4) no
+</pre>
+
+<h2>OH NO! Asymmetry!</h2>
+<p>So far we have only been considering reflexive, symetrix and transitive model. But what happens if we were to break these by introducing an asymmetric action model? We do so by specifying an event in which the quiz master leaks information, but all players do not consider it a possibility. Moreover, none of them notices it. This is what happens, consider the game model just after everyone turned the cards.</p>
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="asymmetry/game-before-quit-slip.png" alt="" /></div>
+              <div class="span2"><img src="asymmetry/game-before-quit-slip-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 9. All players turned their card</i></small>
+          </div>
+
+<p>At night, everyone closes their eyes and the quizmaster whispers to a human who the werewolf is. This time, we actually assume that someone is the werewolf, instead of allowing all options. If we did assume all possibilities, we would just split the model into more or less the same (disconnected) sub Kripke models. The difference would be that player 0 would know of different players who the werewolf is. The exception is the case where the quiz master tells the werewolf that he is the werewolf. This, which should not surprise, does not change anything.</p>
+
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="asymmetry/quit-slip-action.png" alt="" /></div>
+              <div class="span2"><img src="asymmetry/quit-slip-action-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 10. Action model for the quiz master whispering to player 0 that player 1 is the werewolf.</i></small>
+          </div>
+
+
+          <div class="text-center">
+            <div class="row img-polaroid" style="padding-top:15px;padding-bottom:15px;">
+              <div class="span5"><img src="asymmetry/game-after-quit-slip.png" alt="" /></div>
+              <div class="span2"><img src="asymmetry/game-after-quit-slip-legend.png" alt="Legend" /></div>
+            </div>
+            <small><i>Figure 11. The model after this event</i></small>
+          </div>
+	
+	<p>Figures 10 and 11 show how the model is updates, and how in the top-left $w1$ player 0 knows that player 1 knows who the werewolf is. Yet all other players know, read think, that he does not know. Hence the game model is not S5 anymore.</p>
+<pre class="brush:python">
+def main():    
+    players = 4;
+    game = GameModel(players)
+    for player in range(players): game = game * TurnCard(player, players)
+    
+    print "Is the game S5 before updating?", pp(reduce(lambda x,y: x and y, game.isS5()))
+    action = QuizMasterSlipsQuitly(0,1,players,True)
+    print "Is the action S5?", pp(reduce(lambda x,y: x and y, action.isS5()))
+    game = game*action
+    print "Is the game S5 after updating?", pp(reduce(lambda x,y: x and y, game.isS5()))
+    regarding(game)
+    print "Considering world: %s" % game.worlds[0]
+    for p0 in range(players):
+        v = game.worlds[0] <<itholdsthat>> (K(p0, ww(0)) <<kor>> K(p0, ww(1)) <<kor>> K(p0, ww(2)) <<kor>> K(p0, ww(3)))
+        print "Does player %d know who the werewolf is?"  % p0, pp(v)
+    for p1 in range(players):
+        v = game.worlds[0] <<itholdsthat>> knot(K(p1, K(0, ww(0)) <<kor>> K(0, ww(1)) <<kor>> K(0, ww(2)) <<kor>> K(0, ww(3))))
+        print "Does player %d know that player %d does not know who the werewolf is?"  % (p1, 0), pp(v)
+# Syntax highlighter artifacts:
+</pre>
+<p>The result:</p>
+<pre class="brush:python">
+Is the game S5 before updating? yes
+Is the action S5? no
+Is the game S5 after updating? no
+Considering world: player 0 is the werewolf
+Does player 0 know who the werewolf is? yes
+Does player 1 know who the werewolf is? no
+Does player 2 know who the werewolf is? no
+Does player 3 know who the werewolf is? no
+Does player 0 know that player 0 does not know who the werewolf is? no
+Does player 1 know that player 0 does not know who the werewolf is? yes
+Does player 2 know that player 0 does not know who the werewolf is? yes
+Does player 3 know that player 0 does not know who the werewolf is? yes
+</pre>
+
+<p>This shows that our model has asymmetry now, and players 1 to 3 wrongly think that player 0 does not know who the werewolf is.</p>
+
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; 2013 Herbert Kruitbosch, Harm de Vries en Mark Scheeve</p>
+      </div>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Werewolves and Civilians - A Multi-Agent Systems project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="jquery.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+      });
+    </script>
+    <script type="text/javascript" src="mathjax/MathJax.js"></script>
+
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Werewolves and Civilians - A Multi-Agent Systems project</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li><a href="index.html">Introduction</a></li>
+                <li><a href="del.html">Dynamic Epistemic Logic</a></li>
+                <li><a href="implementation.html">Implementation</a></li>
+                <li class="active"><a href="results.html">Conclusion and future work</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+      <div class="row">
+        <div id="content" class="span8 offset1">
+          <h1>Conclusion and future work</h1>
+          <p>We have shown how the game of Werewolves and Civilians is modelled using <a href="del.html">Dynamic Epistemic Logic</a>. Subsequently we show an <a href="implementation.html">Implementation</a> of these formalized models using the Python programming language. We conclude that DEL is an useful logic to systematically update epistemic kripke models. DEL can model a wide range of events which include, among others: public announcements, whispering and viewing. We emphasize that these updates can lead to combinatorial explosion in the number of worlds. For simplified versions of games this is not a really big issue, and DEL can be useful to model these games. We feel, however, that DEL is still a limited logic to realistic model the werewolves game. Our initial approach was to use a more advanced Probabilistic Dynamic Epistemic Logic (PDEL) as proposed in [1]. Given the limited amount of time and lack of knowledge about <a href="del.html">dynamic epistemic logic</a>, it turned out to be an overambituous project. Nevertheless we (try to) explain PDEL and it's possible benefits to model the werewolves game. We hope that future projects might benefit from this information.  </p>
+
+		<h2>Probabilistic Dynamic Epistemic Logic</h2>
+		  <p>
+		  In epistemic logic we have a relation between world $s_1$ to $s_2$ for agent $i$ when the agent could not distinguish between the two worlds. We are, however, not able to model how likely an agent $i$ consider it possible that $s_1$ is an epistemic alternative. In probabilistic epistemic logic an extension is made by including a probabilistic relation in the kripke model beside the usual accessibility relation. Due to this new probabilistic relation we are able to express that an agent assigns a certain probability to a logical sentence(including higher-order statements). For example in the werewolves game it would be realistic to include that agent $2$ believes with probability $a$ that player $1$ is a werewolf. An initial kripke model for PDEL is also straight forward to implement since it resembles the initial model for <a href="del.html">dynamic epistemic logic</a>: in every world for each agent we have that each world should be assigned probability $\frac{1}{4}$.  
+		 </p>
+		 <p>
+		 More interesting are the update models for PDEL. In [1] they use three types of probabilities: prior, occurrence and observation. The prior probabilities are specified in the initial model e.g. the model described in the end of the previous paragraph. The occurrence probabilities specify the agent view on which event produces with probability a certain type of information(precondition). In DEL events are one to one related to preconditions. Here we consider that a certain event can produce different types of preconditions. In events we have modelled in the werewolve game, we do not really need this occurrence probabilities. For example when a player views a Werewolf card, he always recieve the information that he his a werewolf. This means that occurrence probability are 0 or 1 in this case. Thirdly, we have occurrence probabilities which reflects the uncertainty for an agent which event occurs. For example in the turn card example we can only model in DEL, that player $1$ does not know which card player $2$ is dealt. In the real-life version of werewolves we adjust belief if someone is a werewolf based on his behavior during an event. Therefore when someone has a smile on his face when he views his role card, it might be more likely that it is a werewolf. PDEL thus allows for more flexibility in modelling these human intuitions. 
+		 </p>
+		<p>Finally, in [1] a mechanism is provided that given a probabilistic update model $M$ and an initial probabilistic epistemic model $A$, $M \times A$ can be determined in the same fashion as realized in DEL. 
+		<p>
+
+		</p>
+		<h2>References</h2>
+		[1] Van Benthem, J., Gerbrandy, J., & Kooi, B. (2009). Dynamic update with probabilities. <i>Studia Logica, 93(1), 67-96</i>.
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; 2013 Herbert Kruitbosch, Harm de Vries en Mark Scheeve</p>
+      </div>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
