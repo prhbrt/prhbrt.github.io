@@ -295,3 +295,9 @@ body > a#feedbackright {
 body > a#feedbackright:hover {
 	background-color:#00d;
 }
+
+.selector {
+	margin: 0px; border: 1px #ccc solid; background: #eee;
+}
+
+#ex1, #ex2, #img1, #img2 { width: 250px; }
