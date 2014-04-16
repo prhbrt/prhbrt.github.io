@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script type="text/javascript" src="../js/jwplayer.js"></script>
+<script type="text/javascript" src="../js/video-embed-rewriter.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+function initYTVideo(id)
+{
+	_wmVideos_.init("/web/", id);
+}
+
+$(function() {
+  for(var i=2; i<=15; ++i) {
+    var but = $('<button id="k-' + i + '" class="selector">' + i + '</button>');
+    but.data("k", i);
+    $("#k-selector").append(but);
+    console.log(but);
+  }
+  $("#k-selector button").click(function() {
+    k=$(this).data("k");
+    $("#img1").attr("src", "img/kmeans/labels-1-" + k + ".png");
+    $("#img2").attr("src", "img/kmeans/labels-2-" + k + ".png");
+  });
+});
+
+</script>
+	<title>Thesis results</title>
+	<meta name="description" content="Computer scientist">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+	<div id="wrapper">
+	<div id="header">
+			<div class="holder"><h1 class="logo">Thesis results</h1></div>
+			<p>I post some results of my thesis of my page, for easy sharing.</p>
+		</div>
+
+		<div id="main">
+		
+			<div class="contact">
+
+				<h2>K-means</h2>
+				<ul>
+					<li><h3>Color based K-means segmentation</h3></li>
+					<li>This method segments the image based on a KNN clustering of the colors in the image.</li>
+<li><pre>
+Input: image I, number of segments K
+Output: labeled image L
+
+colors = []
+for row in 1..rows, for col in 1..cols
+  colors.append(I(row, col))
+
+clustering = kmeans(colors, k)
+
+for row in 1..rows, for col in 1..cols
+  L(row, col) = clustering.clusterLabelOf(I(row, col))
+</pre></li>
+<li>
+	<img id="ex1" src="img/example-1.bmp"/><img id="ex2" src="img/example-2.bmp"/>
+	<div id="k-selector">K: </div>
+	<img id="img1"/><img id="img2"/>
+</li>				</ul>
+			</div>
+		</div>
+
+
+		<div id="footer"><p>&copy; 2013 Herbert Kruitbosch</p></div>
+	</div>
+</body></html>
+
