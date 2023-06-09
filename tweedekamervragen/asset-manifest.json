@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "./static/css/main.c7a9f450.css",
+    "main.js": "./static/js/main.5b72c68f.js",
+    "static/media/rugr_logonl_wit_rgb_small.png": "./static/media/rugr_logonl_wit_rgb_small.d9970d1e6b67705e8e55.png",
+    "index.html": "./index.html",
+    "main.c7a9f450.css.map": "./static/css/main.c7a9f450.css.map",
+    "main.5b72c68f.js.map": "./static/js/main.5b72c68f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c7a9f450.css",
+    "static/js/main.5b72c68f.js"
+  ]
+}
